@@ -124,6 +124,65 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   computer_name = var.vm_name
 }
+
+
 outputs.tf
+output "resource_group_name" {
+  description = "Created Azure resource group name."
+  value       = azurerm_resource_group.rg.name
+}
+
+output "public_ip_address" {
+  description = "Public IP address of the Ubuntu VM."
+  value       = azurerm_public_ip.public_ip.ip_address
+}
+
+output "ssh_private_key_pem" {
+  description = "Generated private key for SSH access. Keep this secure."
+  value       = tls_private_key.ssh.private_key_pem
+  sensitive   = true
+}
+
 terraform.tfvars.example
+location            = "East US"
+vm_name             = "ubuntu-vm"
+vm_size             = "Standard_B1s"
+admin_username      = "azureuser"
+allowed_ssh_cidr    = "YOUR_IP_ADDRESS/32"
+resource_group_name = "rg-ubuntu-vm"
 variables.tf
+variable "resource_group_name" {
+  description = "Base name for the Azure resource group."
+  type        = string
+  default     = "rg-ubuntu-vm"
+}
+
+variable "location" {
+  description = "Azure region for all resources."
+  type        = string
+  default     = "East US"
+}
+
+variable "vm_name" {
+  description = "Name of the Ubuntu virtual machine."
+  type        = string
+  default     = "ubuntu-vm"
+}
+
+variable "vm_size" {
+  description = "Azure VM size."
+  type        = string
+  default     = "Standard_B1s"
+}
+
+variable "admin_username" {
+  description = "Admin username for SSH access."
+  type        = string
+  default     = "azureuser"
+}
+
+variable "allowed_ssh_cidr" {
+  description = "CIDR block allowed to SSH into the VM."
+  type        = string
+  default     = "0.0.0.0/0"
+}
